@@ -77,10 +77,43 @@ function frame(now) {
 requestAnimationFrame(frame);
 
 
-canvas.addEventListener('click', (e) =>{
+// canvas.addEventListener('click', (e) =>{
+//     const rect = canvas.getBoundingClientRect();
+//     const clickX = (e.clientX - rect.left) / SCALE;
+//     const clickY = (canvas.height - (e.clientY - rect.top)) / SCALE;
+
+//     let closest = null;
+//     let closestDist = Infinity;
+
+//     for (const box of boxes) {
+//         const pos = box.getPosition();
+//         const dx = pos.x - clickX;
+//         const dy = pos.y - clickY;
+//         const dist = Math.sqrt(dx * dx + dy * dy);
+
+//         if (dist < closestDist) {
+//             closestDist = dist;
+//             closest = box;
+//         }
+//     }
+
+//     if (closest) {
+//         closest.setLinearVelocity(new planck.Vec2((Math.random() - 0.5) * 5, 8));
+//     }
+
+// })
+
+let startX = 0;
+let startY = 0;
+let targetBox = null;
+
+canvas.addEventListener('mousedown', (e) => {
     const rect = canvas.getBoundingClientRect();
     const clickX = (e.clientX - rect.left) / SCALE;
     const clickY = (canvas.height - (e.clientY - rect.top)) / SCALE;
+
+    startX = clickX
+    startY = clickY
 
     let closest = null;
     let closestDist = Infinity;
@@ -97,8 +130,17 @@ canvas.addEventListener('click', (e) =>{
         }
     }
 
-    if (closest) {
-        closest.setLinearVelocity(new planck.Vec2((Math.random() - 0.5) * 5, 8));
-    }
+    targetBox = closest;
 
+})
+
+canvas.addEventListener('mouseup', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = (e.clientX - rect.left) / SCALE;
+    const clickY = (canvas.height - (e.clientY - rect.top)) / SCALE;
+    
+    velX = (clickX - startX) * 2;
+    velY = (clickY- startY) * 3;
+
+    targetBox.setLinearVelocity(new planck.Vec2(velX, velY));
 })
